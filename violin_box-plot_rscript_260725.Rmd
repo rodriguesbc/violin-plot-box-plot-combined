@@ -1,0 +1,71 @@
+---
+title: "Violin+boxplot"
+output: html_notebook
+
+library(readxl)
+library(ggplot2)
+library(ggpubr)
+library(viridisLite)
+library(ggbeeswarm)
+
+df <- read_excel("C:/Users/bruno/Downloads/path_lengh_5dai.xlsx",
+                  sheet     = "Página1",
+                  col_names = TRUE)
+df <- df[!is.na(df$Path) & !is.na(df$Group), ]
+
+df$Group <- factor(df$Group, levels = c("Ctrl", "OGA", "OGT"))
+
+
+# Gráfico , coloquei o Notch false pois meu n não é grande, se fosse, Notch=TRUE
+ggplot(df, aes(x = Group, y = Path, fill = Group)) +
+  geom_violin(
+    color  = NA,
+    alpha  = 0.5,
+    trim   = FALSE,
+    width  = 0.8
+  ) +
+  geom_boxplot(
+    width         = 0.15,
+    notch         = TRUE,
+    outlier.shape = NA,
+    color         = "black",
+    alpha         = 0.7,
+    lwd           = 1.2,
+    show.legend   = FALSE
+  ) +
+  geom_quasirandom(
+    shape       = 21,
+    size        = 2,
+    color       = "black",
+    dodge.width = 0.8,
+    alpha       = 0.8,
+    show.legend = FALSE
+  ) +
+  scale_fill_manual(
+    values = c("Ctrl" = "green3", "OGA" = "black", "OGT" = "magenta")
+  ) +
+  coord_cartesian(ylim = c(0, 400)) +
+  labs(x = "Grupo", y = "Path") +
+  theme_minimal() +
+  theme(
+    axis.line  = element_line(color = "black", size = 0.8),
+    axis.ticks = element_line(color = "black", size = 0.8),
+    axis.text  = element_text(size = 12, color = "black"),
+    axis.title = element_text(size = 14)
+  ) +
+  guides(fill = guide_legend(override.aes = list(alpha = 1, color = "black")))
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+plot(cars)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
